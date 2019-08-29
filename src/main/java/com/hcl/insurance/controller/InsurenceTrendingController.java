@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hcl.insurance.dto.TrendingAllRespose;
 import com.hcl.insurance.service.InsurenceTrendingService;
 
-@CrossOrigin(origins = {"*","*/"},allowedHeaders = {"*","*/"})
+@CrossOrigin(origins = { "*", "*/" }, allowedHeaders = { "*", "*/" })
 @RestController
 public class InsurenceTrendingController {
+
+	@Autowired
+	InsurenceTrendingService insurenceTrendingService;
 	
 	
-	@Autowired  InsurenceTrendingService insurenceTrendingService;
-	
-	
+
 	@GetMapping("/trending")
 	public ResponseEntity<List<TrendingAllRespose>> trendingAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(insurenceTrendingService.trendingAll());

@@ -97,7 +97,7 @@ public class SuggestionsServiceImplTest {
 		suggestionsDTO1.setPolicyTerm(25);
 		suggestionsListDTO.add(suggestionsDTO1);
 
-		suggestionsServiceImpl.suggestionsList();
+		 suggestionsServiceImpl.suggestionsList();
 
 	}
 

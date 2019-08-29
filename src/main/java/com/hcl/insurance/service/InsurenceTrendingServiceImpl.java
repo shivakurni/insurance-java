@@ -94,6 +94,7 @@ public class InsurenceTrendingServiceImpl implements InsurenceTrendingService {
 		}
 
 		return trendingAllResposeList;
+		
 	}
 
 }
