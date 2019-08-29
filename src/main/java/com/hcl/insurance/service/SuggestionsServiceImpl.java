@@ -1,13 +1,14 @@
 package com.hcl.insurance.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hcl.insurance.dto.SuggestionsDTO;
-import com.hcl.insurance.entity.Policy;
+import com.hcl.insurance.exception.InsurancePolicyException;
 import com.hcl.insurance.repository.SuggestionsRepository;
 
 /**
@@ -21,34 +22,25 @@ import com.hcl.insurance.repository.SuggestionsRepository;
 @Service
 public class SuggestionsServiceImpl implements SuggestionsService {
 
+	private static final Logger logger = LoggerFactory.getLogger(SuggestionsServiceImpl.class);
+
 	@Autowired
 	SuggestionsRepository suggestionsRepository;
 
 	@Override
 	public List<SuggestionsDTO> suggestionsList() {
+		logger.info("Inside SuggestionsServiceImpl");
 
-		List<SuggestionsDTO> suggestionsListDTO = new ArrayList<>();
-		SuggestionsDTO suggestionsDTO = null;
+		List<SuggestionsDTO> suggestionsListDTO = suggestionsRepository.suggestions();
 
-		List<Policy> policyList = suggestionsRepository.findAll();
-
-		for (Policy policy : policyList) {
-
-			suggestionsDTO = new SuggestionsDTO();
-			suggestionsDTO.setPolicyAssuredSum(policy.getPolicyAssuredSum());
-			suggestionsDTO.setPolicyId(policy.getPolicyId());
-			suggestionsDTO.setPolicyMaturityAge(policy.getPolicyMaturityAge());
-			suggestionsDTO.setPolicyMaxAge(policy.getPolicyMaxAge());
-			suggestionsDTO.setPolicyMinAge(policy.getPolicyMinAge());
-			suggestionsDTO.setPolicyName(policy.getPolicyName());
-			suggestionsDTO.setPolicyOnlinePrice(policy.getPolicyOnlinePrice());
-			suggestionsDTO.setPolicyPrice(policy.getPolicyPrice());
-			suggestionsDTO.setPolicyTerm(policy.getPolicyTerm());
-			suggestionsListDTO.add(suggestionsDTO);
-
+		if (suggestionsListDTO.isEmpty()) {
+			throw new InsurancePolicyException("No Policies Found");
 		}
 
-		return suggestionsListDTO;
+		else {
+			return suggestionsListDTO;
+		}
+
 	}
 
 }

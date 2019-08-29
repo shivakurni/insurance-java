@@ -15,8 +15,8 @@ import com.hcl.insurance.dto.ResponseDto;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
-	@ExceptionHandler(BankProductException.class)
-	public ResponseEntity<ResponseDto> ecomorseExceptionHandler(BankProductException ex, WebRequest request) {
+	@ExceptionHandler(InsurancePolicyException.class)
+	public ResponseEntity<ResponseDto> ecomorseExceptionHandler(InsurancePolicyException ex, WebRequest request) {
 
 		ResponseDto responseDto = new ResponseDto();
 		responseDto.setMessage(ex.getMessage());
