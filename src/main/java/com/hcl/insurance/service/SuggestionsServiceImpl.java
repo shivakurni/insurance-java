@@ -10,11 +10,10 @@ import com.hcl.insurance.dto.SuggestionsDTO;
 import com.hcl.insurance.entity.Policy;
 import com.hcl.insurance.repository.SuggestionsRepository;
 
-
 /**
  * @author Shiva
  * 
- * This class will return suggestions for policies
+ *         This class will return suggestions for policies
  * 
  *
  */
