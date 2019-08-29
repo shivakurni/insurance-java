@@ -17,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hcl.insurance.dto.PolicyDetailsDto;
+import com.hcl.insurance.dto.PolicyDto;
+import com.hcl.insurance.dto.PolicyViewDetailsDto;
+import com.hcl.insurance.dto.SalientFeaturesDto;
+import com.hcl.insurance.dto.TermsDto;
 import com.hcl.insurance.service.PolicyService;
 
 @RunWith(value = SpringJUnit4ClassRunner.class)
@@ -30,6 +34,13 @@ public class PolicyControllerTest {
 	
 	PolicyDetailsDto policyDto = null;
 	List<PolicyDetailsDto> policyList = null;
+	
+	PolicyViewDetailsDto policyViewDetailsDto = null;
+	PolicyDto policyDtos = null;
+	TermsDto termsDto = null;
+	SalientFeaturesDto salientFeaturesDto = null;
+	
+	
 	
 	@Before
 	public void setup() {
@@ -46,6 +57,21 @@ public class PolicyControllerTest {
 		
 		policyList = new ArrayList<PolicyDetailsDto>();
 		policyList.add(policyDto);
+		
+		policyDtos = new PolicyDto();
+		termsDto = new TermsDto();
+		salientFeaturesDto = new SalientFeaturesDto();
+		policyViewDetailsDto = new PolicyViewDetailsDto();
+		
+		policyDtos.setPolicyId(1);
+		
+		termsDto.setPolicyRevival("LA");
+		
+		salientFeaturesDto.setLoanAvailable("SA");
+		
+		policyViewDetailsDto.setPolicy(policyDtos);
+		policyViewDetailsDto.setSalientFeatures(salientFeaturesDto);
+		policyViewDetailsDto.setTerms(termsDto);
 	}
 
 	@Test
@@ -54,6 +80,14 @@ public class PolicyControllerTest {
 		ResponseEntity<List<PolicyDetailsDto>> responseEntity = policyController.policies();
 		List<PolicyDetailsDto> policyDetailsDto = responseEntity.getBody();
 		assertEquals(1, policyDetailsDto.size());
+	}
+	
+	@Test
+	public void policyDetailsTest() {
+		Mockito.when(policyService.policyDetails(Mockito.anyInt())).thenReturn(policyViewDetailsDto);
+		ResponseEntity<PolicyViewDetailsDto> responseEntity = policyController.policyDetails(Mockito.anyInt());
+		PolicyViewDetailsDto policyDetailsDto = responseEntity.getBody();
+		assertEquals(policyViewDetailsDto.toString(), policyDetailsDto.toString());
 	}
 
 }
