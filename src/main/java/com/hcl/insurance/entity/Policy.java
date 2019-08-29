@@ -29,5 +29,6 @@ public class Policy {
 	private String policyLoanFacility;
 	private String policyRevival;
 	private String policyDescription;
+	private Integer premiumPlanId;
 
 }

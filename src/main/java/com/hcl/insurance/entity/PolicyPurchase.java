@@ -27,4 +27,5 @@ public class PolicyPurchase {
 	private String email;
 	private String nomineeName;
 	private String nomineeRelation;
+	private LocalDate policyPurchasedDate;
 }
