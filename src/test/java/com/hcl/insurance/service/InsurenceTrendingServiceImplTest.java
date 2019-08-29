@@ -94,6 +94,8 @@ public class InsurenceTrendingServiceImplTest {
 		policyPurchase.setPolicyId(policy.getPolicyId());
 		policyPurchase.setPolicyPurchaseId(1);
 		
+		
+		
 		policyPurchaseList=new ArrayList<>();
 		policyPurchaseList.add(policyPurchase);
 	}
@@ -156,6 +158,27 @@ public class InsurenceTrendingServiceImplTest {
 	
 	@Test
 	public void testTrendingTop3() {
+		Mockito.when(policyPurchaseRepository.trendngsTop()).thenReturn(policyPurchaseList);
+		Mockito.when(policyRepository.findById(Mockito.any())).thenReturn(Optional.of(policy));
+		
+		List<TrendingAllRespose> actual = insurenceTrendingServiceImpl.trendingTop();
+		Assert.assertEquals(1, actual.size());
+
+	
+	}
+	
+	@Test
+	public void testTrendingTop4() {
+		
+		PolicyPurchase policyPurchase2 = new PolicyPurchase();
+		policyPurchase2.setAddress("add");
+		policyPurchase2.setDob(LocalDate.now());
+		policyPurchase2.setEmail("email");
+		policyPurchase2.setPolicyId(policy.getPolicyId());
+		policyPurchase2.setPolicyPurchaseId(1);
+		
+		policyPurchaseList.add(policyPurchase2);
+		
 		Mockito.when(policyPurchaseRepository.trendngsTop()).thenReturn(policyPurchaseList);
 		Mockito.when(policyRepository.findById(Mockito.any())).thenReturn(Optional.of(policy));
 		

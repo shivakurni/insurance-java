@@ -27,7 +27,7 @@ public class InsurenceTrendingController {
 	}
 	
 	@GetMapping("/trendingTop")
-	public List<TrendingAllRespose> trendingTop() {
+	public List<TrendingAllRespose> trendingTop() { 
 		
 		return insurenceTrendingService.trendingTop();
 		

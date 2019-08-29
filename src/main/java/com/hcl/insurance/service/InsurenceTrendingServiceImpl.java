@@ -25,7 +25,7 @@ public class InsurenceTrendingServiceImpl implements InsurenceTrendingService {
 
 	@Autowired
 	PolicyRepository policyRepository;
-
+ 
 	@Override
 	public List<TrendingAllRespose> trendingAll() {
 
