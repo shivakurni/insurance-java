@@ -16,14 +16,23 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.hcl.insurance.dto.PolicyDetailsDto;
+import com.hcl.insurance.dto.PolicyDto;
+import com.hcl.insurance.dto.PolicyViewDetailsDto;
+import com.hcl.insurance.dto.SalientFeaturesDto;
+import com.hcl.insurance.dto.TermsDto;
 import com.hcl.insurance.entity.Policy;
+import com.hcl.insurance.entity.SalientFeatures;
 import com.hcl.insurance.repository.PolicyRepository;
+import com.hcl.insurance.repository.SalientFeaturesRepository;
 
 @RunWith(value = SpringJUnit4ClassRunner.class)
 public class PolicyServiceImplTest {
 	
 	@Mock
 	PolicyRepository policyRepository;
+	
+	@Mock
+	SalientFeaturesRepository salientFeaturesRepository;
 	
 	@InjectMocks
 	PolicyServiceImpl policyServiceImpl;
@@ -32,6 +41,12 @@ public class PolicyServiceImplTest {
 	List<PolicyDetailsDto> policyList = null;
 	Policy policy = null;
 	List<Policy> policyLists = null;
+	
+	PolicyViewDetailsDto policyViewDetailsDto = null;
+	PolicyDto policyDtos = null;
+	TermsDto termsDto = null;
+	SalientFeaturesDto salientFeaturesDto = null;
+	SalientFeatures salientFeatures = null;
 	
 	@Before
 	public void setup() {
@@ -59,10 +74,28 @@ public class PolicyServiceImplTest {
 		policy.setPolicyOnlinePrice(700000.07);
 		policy.setPolicyPrice(150000.25);
 		policy.setPolicyTerm(2);
+		policy.setPolicyRevival("LA");
 		
 		policyLists = new ArrayList<Policy>();
 		policyLists.add(policy);
 		
+		policyDtos = new PolicyDto();
+		termsDto = new TermsDto();
+		salientFeaturesDto = new SalientFeaturesDto();
+		policyViewDetailsDto = new PolicyViewDetailsDto();
+		salientFeatures = new SalientFeatures();
+		
+		salientFeatures.setLoanAvailable("SA");
+		
+		policyDtos.setPolicyId(1);
+		
+		termsDto.setPolicyRevival("LA");
+		
+		salientFeaturesDto.setLoanAvailable("SA");
+		
+		policyViewDetailsDto.setPolicy(policyDtos);
+		policyViewDetailsDto.setSalientFeatures(salientFeaturesDto);
+		policyViewDetailsDto.setTerms(termsDto);
 	}
 
 	@Test
@@ -70,6 +103,14 @@ public class PolicyServiceImplTest {
 		Mockito.when(policyRepository.findAll()).thenReturn(policyLists);
 		List<PolicyDetailsDto> responseEntity = policyServiceImpl.policies();
 		assertEquals(1, responseEntity.size());
+	}
+	
+	@Test
+	public void policyDetailsTest() {
+		Mockito.when(policyRepository.findByPolicyId(Mockito.anyInt())).thenReturn(policy);
+		Mockito.when(salientFeaturesRepository.findByPolicyId(Mockito.anyInt())).thenReturn(salientFeatures);
+		PolicyViewDetailsDto responseEntity = policyServiceImpl.policyDetails(Mockito.anyInt());
+		assertEquals(policyViewDetailsDto.toString(), responseEntity.toString());
 	}
 
 }
