@@ -71,8 +71,8 @@ public class PurchasePolicyServiceImpl implements PurchasePolicyService {
 	public int calculateAge(LocalDate birthDate) {
 		LocalDate todayDate = LocalDate.now();
 		Period p = Period.between(birthDate, todayDate);
-		int age = p.getYears();
-		return age;
+		return p.getYears();
+		
 
 	}
 

@@ -41,5 +41,13 @@ public class InsurenceTrendingControllerTest {
 				.andExpect(status().isOk());
 
 	}
+	
+	@Test
+	public void testTrendingTop() throws Exception {
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/trendingTop").contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+				.andExpect(status().isOk());
+
+	}
 
 }
