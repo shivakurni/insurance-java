@@ -1,6 +1,7 @@
 package com.hcl.insurance.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,31 +62,44 @@ public class InsurenceTrendingServiceImpl implements InsurenceTrendingService {
 		List<PolicyPurchase> policyPurchaseList = policyPurchaseRepository.trendngsTop();
 		
 		if(policyPurchaseList.isEmpty())
-			throw new BankProductException("");
+			throw new BankProductException("polocy not exist");
 		
-//		
-//		Map<PolicyPurchase, Long> result = policyPurchaseList.stream()
-//				.collect(Collectors.groupingBy(PolicyPurchase::policyId,  Collectors.counting()));
+		Map<Integer, Integer> top =new HashMap<>();
 		
-		Map<String, Long> counting = policyPurchaseList.stream().collect(
-                Collectors.groupingBy(PolicyPurchase::getName, Collectors.counting()));
+		for(PolicyPurchase policyPurchase: policyPurchaseList) {
+			
+			if(top.containsKey(policyPurchase.getPolicyId())) {
+				Integer val = top.get(policyPurchase.getPolicyId());
+				top.replace(policyPurchase.getPolicyId(), ++val);
+			}else {
+				top.put(policyPurchase.getPolicyId(), 1);
+			}
+		}
+		int policyCount = top.size();
+		List<TrendingAllRespose> trendingAllResposeList = new ArrayList<>();
 
-		 for (Entry<String, Long> entry : counting.entrySet())  {
-			 
-			 TredingResponse tredingResponse=new TredingResponse();
+		 for (Map.Entry<Integer,Integer> entry : top.entrySet())  {
+
+				TrendingAllRespose trendingAllRespose = new TrendingAllRespose();
+
+				Optional<Policy> policy = policyRepository.findById(entry.getKey());
+
+				if (!policy.isPresent())
+					throw new BankProductException(" policy not present");
+
+				trendingAllRespose.setPolicyName(policy.get().getPolicyName());
+				trendingAllRespose.setPolicyId(policy.get().getPolicyId());
+				trendingAllRespose.setPolicyCount(entry.getValue().longValue());
+				trendingAllRespose.setPercentage(((entry.getValue() * policyCount) / 100));
+
+				trendingAllResposeList.add(trendingAllRespose);
 			
 			 
-	            System.out.println("Key = " + entry.getKey() + 
-	                             ", Value = " + entry.getValue()); 
-		 }
-	  
+			 
+	    } 
 		
-		for (PolicyPurchase policyPurchase : policyPurchaseList) {
-			policyPurchase.getPolicyId();
 
-		}
-
-		return null;
+		return trendingAllResposeList;
 	}
 
 }

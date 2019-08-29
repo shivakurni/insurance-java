@@ -24,5 +24,12 @@ public class InsurenceTrendingController {
 	public ResponseEntity<List<TrendingAllRespose>> trendingAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(insurenceTrendingService.trendingAll());
 	}
+	
+	@GetMapping("/trendingTop")
+	public List<TrendingAllRespose> trendingTop() {
+		
+		return insurenceTrendingService.trendingTop();
+		
+	}
 
 }
