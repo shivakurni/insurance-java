@@ -1,6 +1,8 @@
 package com.hcl.insurance.service;
 
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,15 +14,17 @@ import com.hcl.insurance.dto.PurchasePolicyDetailsDto;
 import com.hcl.insurance.dto.PurchasePolicyDto;
 import com.hcl.insurance.entity.Policy;
 import com.hcl.insurance.entity.PolicyPurchase;
+import com.hcl.insurance.exception.InsurancePolicyException;
 import com.hcl.insurance.repository.PolicyRepository;
 import com.hcl.insurance.repository.PurchasePolicyRepository;
+import com.hcl.insurance.util.EinsuranceConstants;
 
 @Service
 public class PurchasePolicyServiceImpl implements PurchasePolicyService {
 
 	@Autowired
 	PurchasePolicyRepository purchasePolicyRepository;
-	
+
 	@Autowired
 	PolicyRepository policyRepository;
 
@@ -28,33 +32,48 @@ public class PurchasePolicyServiceImpl implements PurchasePolicyService {
 	public PurchasePolicyDetailsDto optPolicy(PurchasePolicyDto purchasePolicyDto) {
 		PurchasePolicyDetailsDto purchasePolicyDetailsDto = new PurchasePolicyDetailsDto();
 		PolicyPurchase policyPurchase = new PolicyPurchase();
-		Policy policy =  policyRepository.findByPolicyId(purchasePolicyDto.getPolicyId());
-		
-		if(policy.getPolicyMinAge()>=calculateAge(purchasePolicyDto.getDob())) {
-			BeanUtils.copyProperties(purchasePolicyDto, policyPurchase);
-			purchasePolicyRepository.save(policyPurchase);
-			purchasePolicyDetailsDto.setStatusCode(201);
-			purchasePolicyDetailsDto.setMessage("Policy Purchased Successfully..");
-			return purchasePolicyDetailsDto;
+		Policy policy = policyRepository.findByPolicyId(purchasePolicyDto.getPolicyId());
+
+		if (calculateAge(purchasePolicyDto.getDob()) >= policy.getPolicyMinAge()
+				&& calculateAge(purchasePolicyDto.getDob()) <= policy.getPolicyMaxAge()) {
+			if (validPhoneNumber(purchasePolicyDto.getMobileNo())) {
+				if (emailValidation(purchasePolicyDto.getEmail())) {
+					BeanUtils.copyProperties(purchasePolicyDto, policyPurchase);
+					policyPurchase.setPolicyPurchasedDate(LocalDate.now(Clock.systemDefaultZone()));
+					purchasePolicyRepository.save(policyPurchase);
+					purchasePolicyDetailsDto.setStatusCode(201);
+					purchasePolicyDetailsDto.setMessage(EinsuranceConstants.SUCCESS);
+				} else {
+					throw new InsurancePolicyException(EinsuranceConstants.VALID_EMAIL);
+				}
+
+			} else {
+				throw new InsurancePolicyException(EinsuranceConstants.VALID_MOBILE_NO);
+			}
+		} else {
+			throw new InsurancePolicyException(EinsuranceConstants.VALID_AGE);
 		}
-		return null;
+		return purchasePolicyDetailsDto;
 	}
 
-	private boolean validMobileNumber(String number) {
+	private boolean validPhoneNumber(Long number) {
+		String num = number.toString();
 		Pattern p = Pattern.compile("^[0-9]{10}$");
-		Matcher m = p.matcher(number);
-		return (m.find() && m.group().equals(number));
+		Matcher m = p.matcher(num);
+		return (m.find() && m.group().equals(num));
 	}
 
-	private boolean validateCustomerName(String customerName) {
-		String name = ("^[a-zA-Z]*$");
-		return customerName.matches(name);
+	private boolean emailValidation(String email) {
+		String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		return email.matches(regex);
 	}
 
 	public int calculateAge(LocalDate birthDate) {
-		int age = birthDate.getYear();
+		LocalDate todayDate = LocalDate.now();
+		Period p = Period.between(birthDate, todayDate);
+		int age = p.getYears();
 		return age;
-		
+
 	}
 
 }
