@@ -99,7 +99,7 @@ public class SuggestionsServiceImplTest {
 
 		//Mockito.when(suggestionsRepository.suggestions()).thenReturn(suggestionsListDTO);
 
-		List<SuggestionsDTO> actualValue = suggestionsServiceImpl.suggestionsList();
+		 suggestionsServiceImpl.suggestionsList();
 
 		//assertEquals(suggestionsListDTO.size(), actualValue.size());
 
