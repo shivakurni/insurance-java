@@ -5,5 +5,5 @@ import com.hcl.insurance.dto.PurchasePolicyDto;
 
 public interface PurchasePolicyService {
 	
-	public PurchasePolicyDto optPolicy(PurchasePolicyDetailsDto purchasePolicyDetailsDto);
+	public PurchasePolicyDetailsDto optPolicy(PurchasePolicyDto purchasePolicyDto);
 }
