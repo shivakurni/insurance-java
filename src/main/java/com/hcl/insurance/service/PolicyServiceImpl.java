@@ -27,7 +27,7 @@ import com.hcl.insurance.repository.SalientFeaturesRepository;
 @Service
 public class PolicyServiceImpl implements PolicyService {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(PolicyServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PolicyServiceImpl.class);
 
 	@Autowired
 	PolicyRepository policyRepository;

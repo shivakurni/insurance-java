@@ -24,26 +24,20 @@ import com.hcl.insurance.service.PolicyService;
 @CrossOrigin(allowedHeaders = { "*", "*/" }, origins = { "*", "*/" })
 @RestController
 public class PolicyController {
-	private static Logger LGGER = LoggerFactory.getLogger(PolicyController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PolicyController.class);
 	
 	@Autowired
 	PolicyService policyService;
 	
 	@GetMapping("/policies")
 	public ResponseEntity<List<PolicyDetailsDto>> policies() {
-		LGGER.info("PolicyController");
+		LOGGER.info("PolicyController");
 		return new ResponseEntity<>(policyService.policies(), HttpStatus.OK);
 	}
 	
-	/***
-	 * 
-	 * @author Lakshmi
-	 * This Method Will Return Policy Details
-	 *
-	 */
 	@GetMapping("/policy/{policyId}")
 	public ResponseEntity<PolicyViewDetailsDto> policyDetails(@PathVariable("policyId") Integer policyId) {
-		LGGER.info("PolicyController policyDetails");
+		LOGGER.info("PolicyController policyDetails");
 		PolicyViewDetailsDto policyViewDetailsDto = policyService.policyDetails(policyId);
 		return new ResponseEntity<>(policyViewDetailsDto, HttpStatus.OK);
 	}
