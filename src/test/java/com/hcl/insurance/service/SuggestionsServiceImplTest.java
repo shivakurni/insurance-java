@@ -97,11 +97,7 @@ public class SuggestionsServiceImplTest {
 		suggestionsDTO1.setPolicyTerm(25);
 		suggestionsListDTO.add(suggestionsDTO1);
 
-		//Mockito.when(suggestionsRepository.suggestions()).thenReturn(suggestionsListDTO);
-
-		List<SuggestionsDTO> actualValue = suggestionsServiceImpl.suggestionsList();
-
-		//assertEquals(suggestionsListDTO.size(), actualValue.size());
+		suggestionsServiceImpl.suggestionsList();
 
 	}
 

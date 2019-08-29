@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /***
  * 
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@ToString
 public class PurchasePolicyDetailsDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
