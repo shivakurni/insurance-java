@@ -65,7 +65,7 @@ public class InsurenceTrendingServiceImpl implements InsurenceTrendingService {
 				.collect(Collectors.groupingBy(PolicyPurchase::getName, Collectors.counting()));
 
 		for (PolicyPurchase policyPurchase : policyPurchaseList) {
-			policyPurchase.getPolicyId();
+			policyPurchase.getPolicyId(); 
 
 		}
 
