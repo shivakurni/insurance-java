@@ -1,10 +1,10 @@
 package com.hcl.insurance.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,17 +59,41 @@ public class InsurenceTrendingServiceImpl implements InsurenceTrendingService {
 		List<PolicyPurchase> policyPurchaseList = policyPurchaseRepository.trendngsTop();
 
 		if (policyPurchaseList.isEmpty())
-			throw new InsurancePolicyException("");
+			throw new InsurancePolicyException("polocy not exist");
 
-		Map<String, Long> counting = policyPurchaseList.stream()
-				.collect(Collectors.groupingBy(PolicyPurchase::getName, Collectors.counting()));
+		Map<Integer, Integer> top = new HashMap<>();
 
 		for (PolicyPurchase policyPurchase : policyPurchaseList) {
-			policyPurchase.getPolicyId();
+
+			if (top.containsKey(policyPurchase.getPolicyId())) {
+				Integer val = top.get(policyPurchase.getPolicyId());
+				top.replace(policyPurchase.getPolicyId(), ++val);
+			} else {
+				top.put(policyPurchase.getPolicyId(), 1);
+			}
+		}
+		int policyCount = top.size();
+		List<TrendingAllRespose> trendingAllResposeList = new ArrayList<>();
+
+		for (Map.Entry<Integer, Integer> entry : top.entrySet()) {
+
+			TrendingAllRespose trendingAllRespose = new TrendingAllRespose();
+
+			Optional<Policy> policy = policyRepository.findById(entry.getKey());
+
+			if (!policy.isPresent())
+				throw new InsurancePolicyException(" policy not present");
+
+			trendingAllRespose.setPolicyName(policy.get().getPolicyName());
+			trendingAllRespose.setPolicyId(policy.get().getPolicyId());
+			trendingAllRespose.setPolicyCount(entry.getValue().longValue());
+			trendingAllRespose.setPercentage(((entry.getValue() * policyCount) / 100));
+
+			trendingAllResposeList.add(trendingAllRespose);
 
 		}
 
-		return null;
+		return trendingAllResposeList;
 	}
 
 }

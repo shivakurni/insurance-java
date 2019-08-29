@@ -10,7 +10,7 @@ public class TrendingAllRespose {
 	private Integer policyId;
 	private Long policyCount;
 	private String policyName;
-	private Long percentage;
+	private float percentage;
 
 
 }
